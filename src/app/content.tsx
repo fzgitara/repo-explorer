@@ -15,6 +15,7 @@ const Content = () => {
 
   const [users, setUsers] = useState<object[]>([]);
   const [repos, setRepos] = useState<object[]>([]);
+  const [repoOpen, setRepoOpen] = useState<number>(null);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -27,13 +28,12 @@ const Content = () => {
   };
 
   const handleSearchSubmit = async () => {
+    if (loading) return;
     setLoading(true);
     const respUsers = await axios.get(url.users(5, search));
 
     const updatedUsers: object[] = [];
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
     const allUserRepos = respUsers.data.items.map(user => {
       updatedUsers.push(user.login)
       return axios.get(url.repos(user.login));
@@ -55,7 +55,7 @@ const Content = () => {
     return users.map((user, i) => {
       return (
         <div className='mt-3' key={`user-${i}`}>
-          <button id='dropdownDefaultButton' data-dropdown-toggle='dropdown' className='bg-neutral-100 hover:bg-neutral-200 rounded px-5 py-2 w-100 cursor-pointer flex justify-between'>
+          <button onClick={() => setRepoOpen(i)} id='dropdownDefaultButton' data-dropdown-toggle='dropdown' className='bg-neutral-100 hover:bg-neutral-200 rounded px-5 py-2 w-100 cursor-pointer flex justify-between'>
             {user}
             <div className='my-auto'>
               <svg id={`caret-icon-${i}`} className='w-2.5 h-2.5 ms-3' aria-hidden='true' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 10 6'>
@@ -64,7 +64,7 @@ const Content = () => {
             </div>
           </button>
 
-          <div className='flex justify-end'>
+          <div className={`flex justify-end ${repoOpen !== i && 'hidden'}`}>
             <div>
               {repos[i]?.data.map((repo: { name: string }, j: number) => {
                 return (
@@ -97,10 +97,10 @@ const Content = () => {
           {loading ? loadingAnimation() : 'Search'}
         </button>
       </div>
-      {userSearch && (
+      {!loading && userSearch && (
         <p className='text-zinc-500 mt-5'>Showing users for {userSearch}</p>
       )}
-      {users.length > 0 && renderUserRepos()}
+      {!loading && users.length > 0 && renderUserRepos()}
     </div>
   )
 }
