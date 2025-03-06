@@ -103,7 +103,7 @@ const Content = () => {
     return users.map((user: string, i) => {
       return (
         <div className='mt-3' key={`user-${i}`}>
-          <button onClick={() => handleUserClick(i)} id='dropdownDefaultButton' data-dropdown-toggle='dropdown' className='bg-neutral-100 hover:bg-neutral-200 rounded px-5 py-2 w-100 cursor-pointer flex justify-between'>
+          <button onClick={() => handleUserClick(i)} id='dropdownDefaultButton' data-dropdown-toggle='dropdown' className='bg-neutral-100 hover:bg-neutral-200 rounded px-5 py-2 w-full cursor-pointer flex justify-between'>
             {
               user
             }
@@ -114,14 +114,14 @@ const Content = () => {
             </div>
           </button>
 
-          <div className={`flex justify-end ${repoOpen !== i && 'hidden'}`}>
-            <div>
+          <div className={`flex justify-end ${repoOpen !== i ? 'hidden' : ''}`}>
+            <div className='w-92/100'>
               {
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-expect-error
                 repos[i]?.data.map((repo: { stargazers_count: string; name: string, description: string }, j: number) => {
                   return (
-                    <div id='dropdown' className='bg-neutral-200 rounded shadow-sm w-44 mt-2 w-90 p-2' key={`repo-${j}`}>
+                    <div id='dropdown' className='bg-neutral-200 rounded shadow-sm mt-2 p-2' key={`repo-${j}`}>
                       <div className='flex justify-between'>
                         <h1 className='font-semibold'>{repo.name}</h1>
                         <div className='flex my-auto'>
@@ -143,10 +143,10 @@ const Content = () => {
   };
 
   return (
-    <div className='border border-zinc-300 p-8 rounded'>
-      <input type='text' className='bg-zinc-200 border border-zinc-300 rounded p-2 mb-5 w-100' placeholder='Enter username' onChange={handleSearchChange} onKeyDown={handleSearchKeyDown} />
+    <div className='border border-zinc-300 p-8 rounded sm:w-100'>
+      <input type='text' className='bg-zinc-200 border border-zinc-300 rounded p-2 mb-5 w-full' placeholder='Enter username' onChange={handleSearchChange} onKeyDown={handleSearchKeyDown} />
       <div>
-        <button type='button' className='text-white bg-blue-500 hover:bg-blue-600 rounded p-2 w-100 cursor-pointer text-center' onClick={handleSearchSubmit}>
+        <button type='button' className='text-white bg-blue-500 hover:bg-blue-600 rounded p-2 w-full cursor-pointer text-center' onClick={handleSearchSubmit}>
           {loading ? loadingAnimation() : 'Search'}
         </button>
       </div>
